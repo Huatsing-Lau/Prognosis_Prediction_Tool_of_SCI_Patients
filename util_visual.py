@@ -28,27 +28,27 @@ class Visual():
         final_allsave_filename = os.path.join(dir_result, 'all_python_vars.npy')
         result_vars_first = np.load(final_allsave_filename, allow_pickle=True)
         self.sc_params_first = result_vars_first.item()['sc_params']#数据标准化预处理：均值和标注差
-        self.clf_first = joblib.load(os.path.join(dir_result,'Stacking_clf.model'))
+        self.clf_first = joblib.load(os.path.join(dir_result,'Simplified_Esb_Clf.model'))
         
         dir_result = './recent_prediction_deploy'#结果保存路径
         final_allsave_filename = os.path.join(dir_result, 'all_python_vars.npy')
         result_vars_last = np.load(final_allsave_filename, allow_pickle=True)
         self.sc_params_last = result_vars_last.item()['sc_params']#数据标准化预处理：均值和标注差
-        self.clf_last = joblib.load(os.path.join(dir_result,'Stacking_clf.model'))
+        self.clf_last = joblib.load(os.path.join(dir_result,'Simplified_Esb_Clf.model'))
         
         # grid_page_0
         self.grid_p0 = GridspecLayout(10, 2)
         self.p0_left = [
-            w_p0_Mechanical_Ventilation, 
-            w_p0_Kcl, 
             w_p0_Age,
-            w_p0_Morphine_Sulfate,
-            w_p0_Cefazolin,
-            w_p0_Norepinephrine,
-            w_p0_GCS_total,
+            w_p0_Morphine_Sulfate, # Y/N
             w_p0_Albumin,
-            w_p0_sum_diagnosis,
-            w_p0_Glucose_Blood,
+            w_p0_GCS_total,
+            w_p0_PH,# Y/N
+            w_p0_Cefazolin,
+            w_p0_Ca,
+            w_p0_Mechanical_Ventilation, # Y/N
+            w_p0_Free_Ca,
+            w_p0_Kcl, # Y/N
         ]
         self.p0_right = [w_p0_submit, w_p0_result, w_p0_c1, w_p0_c2, w_p0_c3]
         for i, w in enumerate(self.p0_left):
@@ -59,16 +59,16 @@ class Visual():
         # grid_page_1
         self.grid_p1 = GridspecLayout(10, 2)
         self.p1_left = [
-            w_p1_Mechanical_Ventilation,
-            w_p1_los_hospital,
-            w_p1_Kcl,
+            w_p1_Los_Hospital,
             w_p1_Age,
-            w_p1_Morphine_Sulfate,
-            w_p1_Cefazolin,
+            w_p1_Fio2,
             w_p1_Albumin,
-            w_p1_GCS_Total,
             w_p1_BUN,
-            w_p1_Fio2
+            w_p1_Glucose_Blood,
+            w_p1_RDW,
+            w_p1_GCS_Total,
+            w_p1_HR,
+            w_p1_Sum_Diagnosis
         ]
         self.p1_right = [w_p1_submit, w_p1_result, w_p1_c1, w_p1_c2, w_p1_c3]
         for i, w in enumerate(self.p1_left):
@@ -87,18 +87,23 @@ class Visual():
         # value control(input number)
         ## tab 0:(text)
         w_p0_Age.observe(self.on_p0_Age_change, names='value')
-        w_p0_GCS_total.observe(self.on_p0_GCS_total_change, names='value')
         w_p0_Albumin.observe(self.on_p0_Albumin_change, names='value')
-        w_p0_sum_diagnosis.observe(self.on_p0_sum_diagnosis_change, names='value')
-        w_p0_Glucose_Blood.observe(self.on_p0_Glucose_Blood_change, names='value')
+        w_p0_GCS_total.observe(self.on_p0_GCS_total_change, names='value')
+        w_p0_PH.observe(self.on_p0_PH_change, names='value')
         w_p0_Ca.observe(self.on_p0_Ca_change, names='value')
+        w_p0_Free_Ca.observe(self.on_p0_Free_Ca_change, names='value')
         ## tab 1:(text)
-        w_p1_los_hospital.observe(self.on_p1_los_hospital_change, names='value')
+        w_p1_Los_Hospital.observe(self.on_p1_Los_Hospital_change, names='value')
         w_p1_Age.observe(self.on_p1_Age_change, names='value')
-        w_p1_Albumin.observe(self.on_p1_Albumin_change, names='value')
-        w_p1_GCS_Total.observe(self.on_p1_GCS_Total_change, names='value')
-        w_p1_BUN.observe(self.on_p1_BUN_change, names='value')
         w_p1_Fio2.observe(self.on_p1_Fio2_change, names='value')
+        w_p1_Albumin.observe(self.on_p1_Albumin_change, names='value')
+        w_p1_BUN.observe(self.on_p1_BUN_change, names='value')
+        w_p1_Glucose_Blood.observe(self.on_p1_Glucose_Blood_change, names='value')
+        w_p1_RDW.observe(self.on_p1_RDW_change, names='value')
+        w_p1_GCS_Total.observe(self.on_p1_GCS_Total_change, names='value')
+        w_p1_HR.observe(self.on_p1_HR_change, names='value')
+        w_p1_Sum_Diagnosis.observe(self.on_p1_Sum_Diagnosis_change, names='value')
+        
         
         # lock class value
         w_p0_c1.observe(self.on_p0_c1_change, names='value')
@@ -122,8 +127,8 @@ class Visual():
             X_data = [w.value for w in self.p0_left]
             X_description = [w.description for w in self.p0_left]
         X_data = np.array([X_data])
-        features = ['Mechanical.ventilation', 'Kcl', 'age', 'Morphine.Sulfate', 'cefazolin',
-                    'Norepinephrine', 'GCS.total', 'Albumin', 'sum_diagnosis', 'Glucose.Blood']
+        features = ['age', 'Morphine.Sulfate', 'Albumin', 'GCS.total', 'PH',
+                    'cefazolin', 'Ca', 'Mechanical.ventilation', 'Free.Ca', 'Kcl']
         X_deploy_test = pd.DataFrame(data=X_data, index=[0] ,columns=features) 
         with w_out:
             display(X_deploy_test)
@@ -141,8 +146,8 @@ class Visual():
             X_data = [w.value for w in self.p1_left]
             X_description = [w.description for w in self.p1_left]
         X_data = np.array([X_data])
-        features = ['Mechanical.ventilation', 'los_hospital', 'Kcl', 'age', 'Morphine.Sulfate', 'cefazolin',
-                    'Albumin', 'GCS.total', 'BUN', 'Fio2']#, 'Norepinephrine', 'HR', 'sum_diagnosis', 'RBC', 'RDW'
+        features = ['los_hospital', 'age', 'Fio2', 'Albumin', 'BUN',
+                    'Glucose.Blood', 'RDW', 'GCS.total', 'HR', 'sum_diagnosis']
         X_deploy_test = pd.DataFrame(data=X_data, index=[0] ,columns=features)  
         with w_out:
             display(X_deploy_test)
@@ -159,44 +164,59 @@ class Visual():
         if w_p0_Age.value < 0:
             w_p0_Age.value = 0
         if w_p0_Age.value > 120:
-            w_p0_Age.value = 120       
+            w_p0_Age.value = 120   
+    def on_p0_Albumin_change(self, change):
+        if w_p0_Albumin.value < 0:
+            w_p0_Albumin.value = 0
     def on_p0_GCS_total_change(self, change):
         if w_p0_GCS_total.value < 0:
             w_p0_GCS_total.value = 0
     def on_p0_Albumin_change(self, change):
         if w_p0_Albumin.value < 0:
             w_p0_Albumin.value = 0         
-    def on_p0_sum_diagnosis_change(self, change):
-        if w_p0_sum_diagnosis.value < 0:
-            w_p0_sum_diagnosis.value = 0
-    def on_p0_Glucose_Blood_change(self, change):
-        if w_p0_Glucose_Blood.value < 0:
-            w_p0_Glucose_Blood.value = 0   
+    def on_p0_PH_change(self, change):
+        if w_p0_PH.value < 0:
+            w_p0_PH.value = 0
     def on_p0_Ca_change(self, change):
         if w_p0_Ca.value < 0:
             w_p0_Ca.value = 0
-
+    def on_p0_Free_Ca_change(self, change):
+        if w_p0_Free_Ca.value < 0:
+            w_p0_Free_Ca.value = 0
+        
     ## tab 1:
-    def on_p1_los_hospital_change(self, change):
-        if w_p1_los_hospital.value < 0:
-            w_p1_los_hospital.value = 0
+    def on_p1_Los_Hospital_change(self, change):
+        if w_p1_Los_Hospital.value < 0:
+            w_p1_Los_Hospital.value = 0
     def on_p1_Age_change(self, change):
         if w_p1_Age.value < 0:
             w_p1_Age.value = 0
         if w_p1_Age.value > 120:
             w_p1_Age.value = 120
-    def on_p1_Albumin_change(self, change):
-        if w_p1_Albumin.value < 0:
-            w_p1_Albumin.value = 0
-    def on_p1_GCS_Total_change(self, change):
-        if w_p1_GCS_Total.value < 0:
-            w_p1_GCS_Total.value = 0
-    def on_p1_BUN_change(self, change):
-        if w_p1_BUN.value < 0:
-            w_p1_BUN.value = 0
     def on_p1_Fio2_change(self, change):
         if w_p1_Fio2.value < 0:
             w_p1_Fio2.value = 0
+    def on_p1_Albumin_change(self, change):
+        if w_p1_Albumin.value < 0:
+            w_p1_Albumin.value = 0
+    def on_p1_BUN_change(self, change):
+        if w_p1_BUN.value < 0:
+            w_p1_BUN.value = 0
+    def on_p1_Glucose_Blood_change(self, change):
+        if w_p1_Glucose_Blood.value < 0:
+            w_p1_Glucose_Blood.value = 0  
+    def on_p1_RDW_change(self, change):
+        if w_p1_RDW.value < 0:
+            w_p1_RDW.value = 0
+    def on_p1_GCS_Total_change(self, change):
+        if w_p1_GCS_Total.value < 0:
+            w_p1_GCS_Total.value = 0
+    def on_p1_HR_change(self, change):
+        if w_p1_HR.value < 0:
+            w_p1_HR.value = 0
+    def on_p1_Sum_Diagnosis_change(self, change):
+        if w_p1_Sum_Diagnosis.value < 0:
+            w_p1_Sum_Diagnosis.value = 0
     
     # right:        
     def on_p0_c1_change(self, change):

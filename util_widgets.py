@@ -1,34 +1,23 @@
+# -*- coding: utf-8 -*-
 from ipywidgets import interactive, widgets, Layout, GridspecLayout, Box
 
-# form_item_layout = Layout(
-#     display='flex',
-#     flex_flow='row',
-#     justify_content='space-between'
-# )
+form_item_layout = Layout(
+    display='flex',
+    flex_flow='row',
+    justify_content='space-between'
+)
 
 style = {'description_width': '150px'}
 
+# +
 ##======================问题1================================
-w_p0_Mechanical_Ventilation = widgets.ToggleButtons(
-    options=[('not received',0), ('received',1)],
-    description='Mechanical Ventilation:',
-    value=0,
+w_p0_Age = widgets.IntText(
+    description='Age (year):',
+    value=74,
     disabled=False,
-    button_style='', # 'success', 'info', 'warning', 'danger' or ''
     style=style, 
 #     layout=form_item_layout
 )
-
-w_p0_Kcl = widgets.ToggleButtons(
-    options=[('not received',0), ('received',1)],
-    description='Kcl:',
-    value=1,
-    disabled=False,
-    button_style='', # 'success', 'info', 'warning', 'danger' or ''
-    style=style, 
-#     layout=form_item_layout
-)
-
 
 w_p0_Morphine_Sulfate = widgets.ToggleButtons(
     options=[('not received',0), ('received',1)],
@@ -36,6 +25,32 @@ w_p0_Morphine_Sulfate = widgets.ToggleButtons(
     value=0,
     disabled=False,
     button_style='', # 'success', 'info', 'warning', 'danger' or ''
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p0_Albumin = widgets.FloatText(
+    description='Albumin (g/dL):',
+    value=4.4,
+    step=0.1,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p0_GCS_total = widgets.IntText(
+    description='GCS total:',
+    value=15,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p0_PH = widgets.FloatText(
+    description='PH:',
+    value=7.31,
+    step=0.01,
+    disabled=False,
     style=style, 
 #     layout=form_item_layout
 )
@@ -50,58 +65,6 @@ w_p0_Cefazolin = widgets.ToggleButtons(
 #     layout=form_item_layout
 )
 
-w_p0_Norepinephrine = widgets.ToggleButtons(
-    options=[('not received',0), ('received',1)],
-    description='Norephinephrine:',
-    value=0,
-    disabled=False,
-    button_style='', # 'success', 'info', 'warning', 'danger' or ''
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p0_GCS_total = widgets.IntText(
-    description='GCS total:',
-    value=15,
-    disabled=False,
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p0_sum_diagnosis = widgets.IntText(
-    description='sum_diagnosis:',
-    value=14,
-    disabled=False,
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p0_Glucose_Blood = widgets.FloatText(
-    description='Glucose Blood (mg/dL):',
-    value=142.1,
-    step=0.1,
-    disabled=False,
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p0_Age = widgets.IntText(
-    description='Age (year):',
-    value=74,
-    disabled=False,
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p0_Albumin = widgets.FloatText(
-    description='Albumin (g/dL):',
-    value=4.4,
-    step=0.1,
-    disabled=False,
-    style=style, 
-#     layout=form_item_layout
-)
-
 w_p0_Ca = widgets.FloatText(
     description='Ca (mg/dL):',
     value=9.8,
@@ -110,6 +73,45 @@ w_p0_Ca = widgets.FloatText(
     style=style, 
 #     layout=form_item_layout
 )
+
+w_p0_Mechanical_Ventilation = widgets.ToggleButtons(
+    options=[('not received',0), ('received',1)],
+    description='Mechanical Ventilation:',
+    value=0,
+    disabled=False,
+    button_style='', # 'success', 'info', 'warning', 'danger' or ''
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p0_Free_Ca = widgets.FloatText(
+    description='Free Ca (mmol/L):',
+    value=1.12,
+    step=0.01,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p0_Kcl = widgets.ToggleButtons(
+    options=[('not received',0), ('received',1)],
+    description='Kcl:',
+    value=1,
+    disabled=False,
+    button_style='', # 'success', 'info', 'warning', 'danger' or ''
+    style=style, 
+#     layout=form_item_layout
+)
+
+# +
+# w_p0_sum_diagnosis = widgets.IntText(
+#     description='sum_diagnosis:',
+#     value=14,
+#     disabled=False,
+#     style=style, 
+# #     layout=form_item_layout
+# )
+# -
 
 w_p0_submit = widgets.Button(
     description='Submit',
@@ -159,19 +161,11 @@ w_p0_c3 = widgets.FloatSlider(
     readout=True,
     readout_format='.3f',
 )
+
+
+# +
 ##======================问题2===========================
-
-w_p1_Mechanical_Ventilation = widgets.ToggleButtons(
-    options=[('not received',0), ('received',1)],
-    description='Mechanical Ventilation:',
-    value=0,
-    disabled=False,
-    button_style='', # 'success', 'info', 'warning', 'danger' or ''
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p1_los_hospital = widgets.FloatText(
+w_p1_Los_Hospital = widgets.FloatText(
     description='Los Hospital (day):',
     value=12.6,
     step=0.1,
@@ -180,66 +174,9 @@ w_p1_los_hospital = widgets.FloatText(
 #     layout=form_item_layout
 )
 
-
-w_p1_Kcl = widgets.ToggleButtons(
-    options=[('not received',0), ('received',1)],
-    description='Kcl:',
-    value=1,
-    disabled=False,
-    button_style='', # 'success', 'info', 'warning', 'danger' or ''
-    style=style, 
-#     layout=form_item_layout
-)
-
 w_p1_Age = widgets.IntText(
     description='Age (year):',
     value=70,
-    disabled=False,
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p1_Morphine_Sulfate = widgets.ToggleButtons(
-    options=[('not received',0), ('received',1)],
-    description='Morphine Sulfate:',
-    value=0,
-    disabled=False,
-    button_style='', # 'success', 'info', 'warning', 'danger' or ''
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p1_Cefazolin = widgets.ToggleButtons(
-    options=[('not received',0), ('received',1)],
-    description='Cefazolin:',
-    value=0,
-    disabled=False,
-    button_style='', # 'success', 'info', 'warning', 'danger' or ''
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p1_Albumin = widgets.FloatText(
-    description='Albumin (g/dL):',
-    value=4.1,
-    step=0.1,
-    disabled=False,
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p1_GCS_Total = widgets.IntText(
-    description='GCS_Total:',
-    value=15,
-    disabled=False,
-    style=style, 
-#     layout=form_item_layout
-)
-
-w_p1_BUN = widgets.FloatText(
-    description='BUN (mg/dL):',
-    value=27.2,
-    step=0.1,
     disabled=False,
     style=style, 
 #     layout=form_item_layout
@@ -254,6 +191,103 @@ w_p1_Fio2 = widgets.FloatText(
 #     layout=form_item_layout
 )
 
+w_p1_Albumin = widgets.FloatText(
+    description='Albumin (g/dL):',
+    value=4.1,
+    step=0.1,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p1_BUN = widgets.FloatText(
+    description='BUN (mg/dL):',
+    value=27.2,
+    step=0.1,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p1_Glucose_Blood = widgets.FloatText(
+    description='Glucose Blood (mg/dL):',
+    value=92.0,
+    step=0.1,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p1_RDW = widgets.FloatText(
+    description='RDW (%):',
+    value=14.7,
+    step=0.1,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p1_GCS_Total = widgets.IntText(
+    description='GCS_Total:',
+    value=15,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p1_HR = widgets.IntText(
+    description='HR (bpm):',
+    value=98,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+w_p1_Sum_Diagnosis = widgets.IntText(
+    description='Sum Diagnosis:',
+    value=14,
+    disabled=False,
+    style=style, 
+#     layout=form_item_layout
+)
+
+# w_p1_Mechanical_Ventilation = widgets.ToggleButtons(
+#     options=[('not received',0), ('received',1)],
+#     description='Mechanical Ventilation:',
+#     value=0,
+#     disabled=False,
+#     button_style='', # 'success', 'info', 'warning', 'danger' or ''
+#     style=style, 
+# #     layout=form_item_layout
+# )
+# w_p1_Kcl = widgets.ToggleButtons(
+#     options=[('not received',0), ('received',1)],
+#     description='Kcl:',
+#     value=1,
+#     disabled=False,
+#     button_style='', # 'success', 'info', 'warning', 'danger' or ''
+#     style=style, 
+# #     layout=form_item_layout
+# )
+# w_p1_Morphine_Sulfate = widgets.ToggleButtons(
+#     options=[('not received',0), ('received',1)],
+#     description='Morphine Sulfate:',
+#     value=0,
+#     disabled=False,
+#     button_style='', # 'success', 'info', 'warning', 'danger' or ''
+#     style=style, 
+# #     layout=form_item_layout
+# )
+# w_p1_Cefazolin = widgets.ToggleButtons(
+#     options=[('not received',0), ('received',1)],
+#     description='Cefazolin:',
+#     value=0,
+#     disabled=False,
+#     button_style='', # 'success', 'info', 'warning', 'danger' or ''
+#     style=style, 
+# #     layout=form_item_layout
+# )
+# -
 
 w_p1_submit = widgets.Button(
     description='Submit',
@@ -306,6 +340,6 @@ w_p1_c3 = widgets.FloatSlider(
 ##======================================================
 w_out = widgets.Output()
 
-##=======================================================
+# #=======================================================
 
    
